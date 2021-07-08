@@ -450,10 +450,15 @@ export class Server extends EventEmitter {
 
     /**
      * Starts listening at a port specified in the constructor.
+     * @param address Optional address
      * @param callback Optional callback
      * @return {(Promise|undefined)}
      */
-    listen(callback) {
+    listen(address, callback) {
+        if (typeof address === 'function') {
+            callback = address;
+            address = '';
+        }
         const promise = new Promise((resolve, reject) => {
             // Unfortunately server.listen() is not a normal function that fails on error,
             // so we need this trickery
@@ -475,7 +480,11 @@ export class Server extends EventEmitter {
 
             this.server.on('error', onError);
             this.server.on('listening', onListening);
-            this.server.listen(this.port);
+            if (address) {
+                this.server.listen(this.port, address);
+            } else {
+                this.server.listen(this.port);
+            }
         });
 
         return nodeify(promise, callback);
