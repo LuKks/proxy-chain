@@ -14,7 +14,7 @@ export default class HandlerTunnelDirect extends HandlerBase {
     run() {
         this.log(`Connecting to target ${this.trgParsed.hostname}:${this.trgParsed.port}`);
 
-        const socket = net.createConnection(this.trgParsed.port, this.trgParsed.hostname);
+        const socket = net.createConnection({ port: this.trgParsed.port, host: this.trgParsed.hostname, localAddress: this.localAddress });
         this.onTrgSocket(socket);
 
         socket.on('connect', this.onTrgSocketConnect);

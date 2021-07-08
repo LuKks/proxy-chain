@@ -100,6 +100,7 @@ export class Server extends EventEmitter {
         this.prepareRequestFunction = options.prepareRequestFunction;
         this.authRealm = options.authRealm || DEFAULT_AUTH_REALM;
         this.verbose = !!options.verbose;
+        this.localAddress = !!options.localAddress;
 
         // Key is handler ID, value is HandlerXxx instance
         this.handlers = {};
@@ -199,6 +200,7 @@ export class Server extends EventEmitter {
             srcRequest: request,
             srcHead: null,
             trgParsed: null,
+            localAddress: this.localAddress || '',
             upstreamProxyUrlParsed: null,
         };
 
