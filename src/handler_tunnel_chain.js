@@ -23,12 +23,14 @@ export default class HandlerTunnelChain extends HandlerBase {
             method: 'CONNECT',
             hostname: this.upstreamProxyUrlParsed.hostname,
             port: this.upstreamProxyUrlParsed.port,
-            localAddress: this.localAddress,
             path: targetHost,
             headers: {
                 Host: targetHost,
             },
         };
+        if (this.localAddress) {
+            options.localAddress = this.localAddress;
+        }
 
         maybeAddProxyAuthorizationHeader(this.upstreamProxyUrlParsed, options.headers);
 

@@ -100,7 +100,6 @@ export class Server extends EventEmitter {
         this.prepareRequestFunction = options.prepareRequestFunction;
         this.authRealm = options.authRealm || DEFAULT_AUTH_REALM;
         this.verbose = !!options.verbose;
-        this.localAddress = !!options.localAddress;
 
         // Key is handler ID, value is HandlerXxx instance
         this.handlers = {};
@@ -200,7 +199,7 @@ export class Server extends EventEmitter {
             srcRequest: request,
             srcHead: null,
             trgParsed: null,
-            localAddress: this.localAddress || '',
+            localAddress: '',
             upstreamProxyUrlParsed: null,
         };
 
@@ -303,6 +302,10 @@ export class Server extends EventEmitter {
                 // If not authenticated, request client to authenticate
                 if (funcResult && funcResult.requestAuthentication) {
                     throw new RequestError(funcResult.failMsg || 'Proxy credentials required.', 407);
+                }
+
+                if (funcResult && funcResult.localAddress) {
+                    handlerOpts.localAddress = funcResult.localAddress;
                 }
 
                 if (funcResult && funcResult.upstreamProxyUrl) {
